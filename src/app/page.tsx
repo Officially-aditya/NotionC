@@ -1,4 +1,3 @@
-// src/app/page.tsx
 "use client";
 
 import Image from "next/image";
@@ -70,15 +69,15 @@ const reminders = [
 ];
 
 export default function DashboardPage() {
-  const [activeNav, setActiveNav] = useState<string>("Home");
+  const [activeNav, setActiveNav] = useState("Home");
   const [activeTab, setActiveTab] = useState<"Today" | "Week" | "Month">("Today");
 
   return (
-    <div className="flex min-h-screen bg-gray-900 text-white">
+    <div className="flex min-h-screen bg-white text-black">
       {/* Sidebar */}
-      <aside className="hidden md:flex w-64 flex-col bg-gray-800">
+      <aside className="hidden md:flex w-86 flex-col" style={{ backgroundColor: "#dcdcdc" }}>
         <div className="px-6 py-8 flex flex-col flex-1">
-          <h2 className="text-3xl font-semibold text-gray-200 mb-10">My Logo</h2>
+          <h2 className="text-3xl font-semibold text-black mb-10">My Logo</h2>
           <nav className="flex-1 space-y-4">
             {navItems.map((item) => (
               <button
@@ -86,8 +85,8 @@ export default function DashboardPage() {
                 onClick={() => setActiveNav(item.label)}
                 className={`flex w-full items-center px-3 py-2 rounded-md ${
                   activeNav === item.label
-                    ? "bg-indigo-600 text-white"
-                    : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    ? "bg-white text-black"
+                    : "text-black hover:bg-gray-300"
                 }`}
               >
                 <span className="mr-3 text-xl">{item.icon}</span>
@@ -96,11 +95,11 @@ export default function DashboardPage() {
             ))}
           </nav>
           <div className="mt-auto space-y-3">
-            <button className="flex w-full items-center px-3 py-2 text-gray-400 hover:text-gray-200 hover:bg-gray-700 rounded-md">
+            <button className="flex w-full items-center px-3 py-2 text-black hover:text-white hover:bg-gray-700 rounded-md">
               <span className="mr-2 text-xl">⚙️</span>
               <span>Settings</span>
             </button>
-            <button className="flex w-full items-center px-3 py-2 text-gray-400 hover:text-gray-200 hover:bg-gray-700 rounded-md">
+            <button className="flex w-full items-center px-3 py-2 text-black hover:text-white hover:bg-gray-700 rounded-md">
               <span className="mr-2 text-xl">🚪</span>
               <span>Log Out</span>
             </button>
@@ -111,191 +110,191 @@ export default function DashboardPage() {
       {/* Main Content */}
       <div className="flex flex-1 flex-col">
         {/* Top Header */}
-        <header className="flex items-center justify-between bg-gray-800 px-6 py-4">
-          <h1 className="text-4xl font-bold text-indigo-400">DASHBOARD</h1>
+        <header className="flex items-center justify-between bg-white border-b border-gray-200 px-6 py-4 text-black">
+          <h1 className="text-4xl font-bold style={{ color: '#2d2d2d' }}">DASHBOARD</h1>
           <input
             type="text"
             placeholder="Search..."
-            className="w-64 rounded-md border border-gray-700 bg-gray-700 px-4 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-64 rounded-md border border-gray-400 bg-white px-4 py-2 text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </header>
 
-        {/* Content Grid */}
-        <main className="flex-1 overflow-y-auto p-6 bg-gray-900">
+        {/* Content */}
+        <main className="flex-1 overflow-y-auto p-6 bg-white">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-            {/* 1. Tasks & Meetings */}
-            <div className="space-y-8 lg:col-span-2">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                {/* Today’s Tasks */}
-                <section className="rounded-lg bg-gray-800 p-6 shadow-lg">
-                  <h2 className="mb-4 text-2xl font-semibold text-gray-100">Today’s Tasks</h2>
-                  <ul className="space-y-3">
-                    {tasks.map((task, idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-start rounded-md border border-gray-700 bg-gray-700 p-4 hover:bg-gray-600"
-                      >
-                        <div className="flex-1">
-                          <h3 className="font-medium text-gray-200">{task.title}</h3>
-                          <p className="mt-1 text-sm text-gray-400">{task.description}</p>
-                        </div>
-                        <button className="ml-4 rounded-md bg-indigo-500 px-3 py-1 text-sm font-medium text-white hover:bg-indigo-600">
-                          Done
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="mt-6 text-right">
-                    <button className="text-indigo-400 hover:underline">Manage &gt;</button>
-                  </div>
-                </section>
-
-                {/* Today’s Meetings */}
-                <section className="rounded-lg bg-gray-800 p-6 shadow-lg">
-                  <h2 className="mb-4 text-2xl font-semibold text-gray-100">Today’s Meetings</h2>
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    {meetings.map((meet, idx) => (
-                      <div
-                        key={idx}
-                        className="rounded-md border border-gray-700 bg-gray-700 p-4 hover:bg-gray-600"
-                      >
-                        <p className="font-semibold text-gray-200">{meet.time}</p>
-                        <p className="mt-1 text-sm text-gray-400">{meet.desc}</p>
-                      </div>
-                    ))}
-                  </div>
-                </section>
+  {/* Tasks & Meetings */}
+  <div className="space-y-8 lg:col-span-2">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      {/* Tasks */}
+      <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
+        <h2 className="mb-4 text-2xl font-semibold">Today’s Tasks</h2>
+        <ul className="space-y-3">
+          {tasks.map((task, idx) => (
+            <li
+              key={idx}
+              className="flex items-start rounded-[24px] border border-[#D9D9D9] bg-white p-4 hover:bg-gray-100"
+            >
+              <div className="flex-1">
+                <h3 className="font-medium">{task.title}</h3>
+                <p className="mt-1 text-sm text-gray-600">{task.description}</p>
               </div>
+              <button className="ml-4 rounded-md bg-[#5865f2] px-3 py-1 text-sm font-medium text-white hover:bg-[#4752d6]">
+                Done
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
 
-              {/* Project Lists */}
-              <section className="rounded-lg bg-gray-800 p-6 shadow-lg">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-semibold text-gray-100">Project Lists</h2>
-                  <div className="space-x-2">
-                    {(["Today", "Week", "Month"] as const).map((label) => (
-                      <button
-                        key={label}
-                        onClick={() => setActiveTab(label)}
-                        className={`rounded-md px-4 py-2 text-sm font-medium ${
-                          activeTab === label
-                            ? "bg-indigo-500 text-white"
-                            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                        }`}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div className="mt-6 space-y-5">
-                  {projects.map((proj, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center justify-between rounded-md border border-gray-700 bg-gray-700 p-4 hover:bg-gray-600"
-                    >
-                      <div className="space-y-1">
-                        <h3 className="text-lg font-semibold text-gray-100">{proj.name}</h3>
-                        <p className="text-sm text-gray-300">{proj.desc}</p>
-                        <p className="text-xs text-gray-500">{proj.date}</p>
-                      </div>
-                      <div className="flex -space-x-2">
-                        {proj.avatars.map((src, aidx) => (
-                          <div
-                            key={aidx}
-                            className="relative h-8 w-8 rounded-full border-2 border-gray-900"
-                          >
-                            <Image
-                              src={src}
-                              alt="avatar"
-                              fill
-                              className="rounded-full"
-                              sizes="32px"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
+      {/* Meetings */}
+      <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
+        <h2 className="mb-4 text-2xl font-semibold">Today’s Meetings</h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {meetings.map((meet, idx) => (
+            <div
+              key={idx}
+              className="rounded-[24px] border border-[#D9D9D9] bg-white p-4 hover:bg-gray-100"
+            >
+              <p className="font-semibold">{meet.time}</p>
+              <p className="mt-1 text-sm text-gray-600">{meet.desc}</p>
             </div>
+          ))}
+        </div>
+      </section>
+    </div>
 
-            {/* 2. Sidebar Metrics + Reminders */}
-            <div className="space-y-8">
-              {/* Projects Worked with Donut Chart */}
-              <section className="rounded-lg bg-gray-800 p-6 shadow-lg">
-                <h2 className="mb-4 text-2xl font-semibold text-gray-100">Projects Worked</h2>
-                <div className="flex items-center justify-center">
-                  <div className="relative h-40 w-40">
-                    <svg viewBox="0 0 36 36" className="absolute h-full w-full">
-                      <path
-                        className="text-gray-700"
-                        d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831
-                           a 15.9155 15.9155 0 0 1 0 -31.831"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                      />
-                      <path
-                        className="text-indigo-500"
-                        strokeDasharray="40, 100"
-                        d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831
-                           a 15.9155 15.9155 0 0 1 0 -31.831"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-3xl font-bold text-indigo-400">40%</span>
-                    </div>
-                  </div>
+    {/* Project Lists */}
+    <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-semibold">Project Lists</h2>
+        <div className="space-x-2">
+          {(["Today", "Week", "Month"] as const).map((label) => (
+            <button
+              key={label}
+              onClick={() => setActiveTab(label)}
+              className={`rounded-md px-4 py-2 text-sm font-medium ${
+                activeTab === label
+                  ? "bg-[#5865f2] text-white"
+                  : "bg-gray-200 text-black hover:bg-gray-300"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="mt-6 space-y-5">
+        {projects.map((proj, idx) => (
+          <div
+            key={idx}
+            className="flex items-center justify-between rounded-[24px] border border-[#D9D9D9] bg-white p-4 hover:bg-gray-100"
+          >
+            <div className="space-y-1">
+              <h3 className="text-lg font-semibold">{proj.name}</h3>
+              <p className="text-sm text-gray-600">{proj.desc}</p>
+              <p className="text-xs text-gray-500">{proj.date}</p>
+            </div>
+            <div className="flex -space-x-2">
+              {proj.avatars.map((src, aidx) => (
+                <div
+                  key={aidx}
+                  className="relative h-8 w-8 rounded-full border-2 border-white"
+                >
+                  <Image
+                    src={src}
+                    alt="avatar"
+                    fill
+                    className="rounded-full"
+                    sizes="32px"
+                  />
                 </div>
-                <ul className="mt-6 space-y-2 text-sm text-gray-300">
-                  {legendItems.map((item, idx) => (
-                    <li key={idx} className="flex items-center">
-                      <span className={`mr-2 h-3 w-3 rounded-full ${item.color}`}></span>
-                      <span>
-                        {item.label} — <span className="font-medium text-gray-100">{item.percent}</span>
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-
-              {/* Reminders */}
-              <section className="rounded-lg bg-gray-800 p-6 shadow-lg">
-                <h2 className="mb-4 text-2xl font-semibold text-gray-100">Reminders</h2>
-                <ul className="space-y-3">
-                  {reminders.map((rem, idx) => (
-                    <li
-                      key={idx}
-                      className="flex items-center justify-between rounded-md border border-gray-700 bg-gray-700 px-4 py-2 hover:bg-gray-600"
-                    >
-                      <span className="text-gray-200">{rem.title}</span>
-                      <span className="text-gray-400">{rem.time}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-6 text-center">
-                  <button className="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-600">
-                    + Add Reminder
-                  </button>
-                </div>
-              </section>
+              ))}
             </div>
           </div>
+        ))}
+      </div>
+    </section>
+  </div>
+
+  {/* Sidebar Metrics */}
+  <div className="space-y-8">
+    {/* Donut Chart */}
+    <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
+      <h2 className="mb-4 text-2xl font-semibold">Projects Worked</h2>
+      <div className="flex items-center justify-center">
+        <div className="relative h-40 w-40">
+          <svg viewBox="0 0 36 36" className="absolute h-full w-full">
+            <path
+              className="text-gray-200"
+              d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831
+                 a 15.9155 15.9155 0 0 1 0 -31.831"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+            />
+            <path
+              className="text-[#5865f2]"
+              strokeDasharray="40, 100"
+              d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831
+                 a 15.9155 15.9155 0 0 1 0 -31.831"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+            />
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-3xl font-bold text-[#5865f2]">40%</span>
+          </div>
+        </div>
+      </div>
+      <ul className="mt-6 space-y-2 text-sm text-black">
+        {legendItems.map((item, idx) => (
+          <li key={idx} className="flex items-center">
+            <span className={`mr-2 h-3 w-3 rounded-full ${item.color}`}></span>
+            <span>
+              {item.label} — <span className="font-medium">{item.percent}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    {/* Reminders */}
+    <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
+      <h2 className="mb-4 text-2xl font-semibold">Reminders</h2>
+      <ul className="space-y-3">
+        {reminders.map((rem, idx) => (
+          <li
+            key={idx}
+            className="flex items-center justify-between rounded-[24px] border border-[#D9D9D9] bg-white px-4 py-2 hover:bg-gray-100"
+          >
+            <span>{rem.title}</span>
+            <span className="text-gray-600">{rem.time}</span>
+          </li>
+        ))}
+      </ul>
+      <div className="mt-6 text-center">
+        <button
+          className="rounded-[24px] border-2 border-[#5865f2] px-4 py-2 text-sm font-medium text-[#5865f2] hover:bg-[#f0f2ff]"
+        >
+          + Add Reminder
+        </button>
+      </div>
+    </section>
+  </div>
+</div>
+
         </main>
       </div>
 
-      {/* Mobile Bottom Nav (visible on small screens) */}
-      <nav className="fixed bottom-0 left-0 right-0 z-10 flex justify-around bg-gray-800 p-3 text-gray-400 md:hidden">
+      {/* Mobile Nav */}
+      <nav className="fixed bottom-0 left-0 right-0 z-10 flex justify-around bg-white p-3 text-black md:hidden border-t border-gray-300">
         {navItems.map((item) => (
           <button
             key={item.label}
             onClick={() => setActiveNav(item.label)}
             className={`flex flex-col items-center text-sm ${
-              activeNav === item.label ? "text-indigo-400" : "hover:text-gray-200"
+              activeNav === item.label ? "text-indigo-500" : "hover:text-gray-800"
             }`}
           >
             <span className="text-xl">{item.icon}</span>
