@@ -3,6 +3,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import CommunityTab from "@/components/CommunityTab";
+import CollectionsPage from "@/components/CollectionsPage";
 
 const navItems = [
   { label: "Home", icon: "🏠" },
@@ -76,9 +77,9 @@ export default function DashboardPage() {
   return (
     <div className="flex min-h-screen bg-white text-black">
       {/* Sidebar */}
-      <aside className="hidden md:flex w-86 flex-col" style={{ backgroundColor: "#dcdcdc" }}>
+      <aside className="hidden md:flex w-80 flex-col shrink-0" style={{ backgroundColor: "#dcdcdc" }}>
         <div className="px-6 py-8 flex flex-col flex-1">
-          <h2 className="text-3xl font-semibold text-black mb-10">My Logo</h2>
+          <h2 className="text-3xl font-semibold text-black mb-10">Logo</h2>
           <nav className="flex-1 space-y-4">
             {navItems.map((item) => (
               <button
@@ -279,6 +280,11 @@ export default function DashboardPage() {
           {activeNav === "Community" && (
             <div className="px-0">
               <CommunityTab />
+            </div>
+          )}
+          {activeNav === "Collection" && (
+            <div className="px-0">
+                <CollectionsPage />
             </div>
           )}
 
