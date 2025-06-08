@@ -4,6 +4,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import CommunityTab from "@/components/CommunityTab";
 import CollectionsPage from "@/components/CollectionsPage";
+import Canvas from "@/components/Canvas";
 import { ChevronDown, Plus } from "lucide-react";
 
 const navItems = [
@@ -388,6 +389,12 @@ export default function DashboardPage() {
               <CollectionsPage />
             </div>
           )}
+          {activeNav === "Canvas" && (
+            <div className="px-0">
+              <Canvas />
+            </div>
+          )
+          }
         </main>
       </div>
     </div>
