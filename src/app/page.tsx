@@ -5,6 +5,8 @@ import React, { useState } from "react";
 import CommunityTab from "@/components/CommunityTab";
 import CollectionsPage from "@/components/CollectionsPage";
 import Canvas from "@/components/Canvas";
+// import CalendarPage from "@/components/Calendar/CalendarPage";
+import ChatPage from "@/components/Chat/ChatPage";
 import { ChevronDown, Plus } from "lucide-react";
 
 const navItems = [
@@ -89,23 +91,18 @@ const reminders = [
 ];
 
 export default function DashboardPage() {
-  const [activeNav, setActiveNav] = useState("Home");
-  const [activeTab, setActiveTab] = useState<"Today" | "Week" | "Month">(
-    "Today"
-  );
+  const [activeNav, setActiveNav] = useState<string>("Home");
+  const [activeTab, setActiveTab] = useState<"Today" | "Week" | "Month">("Today");
   const [projectDropdownOpen, setProjectDropdownOpen] = useState(false);
+
   return (
     <div className="flex min-h-screen bg-white text-black">
-      <aside
-        className="hidden md:flex w-80 flex-col shrink-0"
-        style={{ backgroundColor: "#dcdcdc" }}
-      >
+      {/* Sidebar */}
+      <aside className="hidden md:flex w-80 flex-col shrink-0" style={{ backgroundColor: "#dcdcdc" }}>
         <div className="px-6 py-8 flex flex-col flex-1">
           <h2 className="text-3xl font-semibold text-black mb-10">Logo</h2>
           <nav className="flex-1 space-y-4">
             {navItems.map((item) => {
-              // Projects dropdown menu
-
               if (item.label === "Projects/Team") {
                 return (
                   <div key={item.label} className="space-y-2">
@@ -130,16 +127,12 @@ export default function DashboardPage() {
                         }`}
                       />
                     </button>
-
                     {projectDropdownOpen && (
                       <div className="ml-10 space-y-2 text-sm">
                         <button className="flex items-center gap-2 text-black hover:text-indigo-600">
-                          <Plus className="w-4 h-4" />
-                          New Project
+                          <Plus className="w-4 h-4" /> New Project
                         </button>
-                        <div className="text-gray-600 text-xs uppercase mt-1">
-                          Recent
-                        </div>
+                        <div className="text-gray-600 text-xs uppercase mt-1">Recent</div>
                         <ul className="space-y-1">
                           {[
                             { name: "UI Designs", icon: "📊" },
@@ -161,7 +154,6 @@ export default function DashboardPage() {
                   </div>
                 );
               }
-
               return (
                 <button
                   key={item.label}
@@ -178,7 +170,6 @@ export default function DashboardPage() {
               );
             })}
           </nav>
-
           <div className="mt-auto space-y-3">
             <button className="flex w-full items-center px-3 py-2 text-black hover:text-white hover:bg-gray-700 rounded-md">
               <span className="mr-2 text-xl">⚙️</span>
@@ -194,7 +185,7 @@ export default function DashboardPage() {
 
       {/* Main Content */}
       <div className="flex flex-1 flex-col">
-        {/* Only show header on Home */}
+        {/* Header only on Home */}
         {activeNav === "Home" && (
           <header className="flex items-center justify-between bg-white border-b border-gray-200 px-6 py-4 text-black">
             <h1 className="text-4xl font-bold" style={{ color: "#2d2d2d" }}>
@@ -209,14 +200,16 @@ export default function DashboardPage() {
         )}
 
         <main className="flex-1 overflow-y-auto p-6 bg-white">
+          {/* Home */}
           {activeNav === "Home" && (
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+              {/* Left */}
               <div className="space-y-8 lg:col-span-2">
+                {/* Tasks & Meetings */}
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  {/* Today's Tasks */}
                   <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
-                    <h2 className="mb-4 text-2xl font-semibold">
-                      Today’s Tasks
-                    </h2>
+                    <h2 className="mb-4 text-2xl font-semibold">Today’s Tasks</h2>
                     <ul className="space-y-3">
                       {tasks.map((task, idx) => (
                         <li
@@ -225,9 +218,7 @@ export default function DashboardPage() {
                         >
                           <div className="flex-1">
                             <h3 className="font-medium">{task.title}</h3>
-                            <p className="mt-1 text-sm text-gray-600">
-                              {task.description}
-                            </p>
+                            <p className="mt-1 text-sm text-gray-600">{task.description}</p>
                           </div>
                           <button className="ml-4 rounded-md bg-[#5865f2] px-3 py-1 text-sm font-medium text-white hover:bg-[#4752d6]">
                             Done
@@ -237,10 +228,9 @@ export default function DashboardPage() {
                     </ul>
                   </section>
 
+                  {/* Today's Meetings */}
                   <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
-                    <h2 className="mb-4 text-2xl font-semibold">
-                      Today’s Meetings
-                    </h2>
+                    <h2 className="mb-4 text-2xl font-semibold">Today’s Meetings</h2>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       {meetings.map((meet, idx) => (
                         <div
@@ -248,15 +238,14 @@ export default function DashboardPage() {
                           className="rounded-[24px] border border-[#D9D9D9] bg-white p-4 hover:bg-gray-100"
                         >
                           <p className="font-semibold">{meet.time}</p>
-                          <p className="mt-1 text-sm text-gray-600">
-                            {meet.desc}
-                          </p>
+                          <p className="mt-1 text-sm text-gray-600">{meet.desc}</p>
                         </div>
                       ))}
                     </div>
                   </section>
                 </div>
 
+                {/* Project Lists */}
                 <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
                   <div className="flex items-center justify-between">
                     <h2 className="text-2xl font-semibold">Project Lists</h2>
@@ -297,7 +286,7 @@ export default function DashboardPage() {
                                 src={src}
                                 alt="avatar"
                                 fill
-                                className="rounded-full"
+                                className="rounded-full object-cover"
                                 sizes="32px"
                               />
                             </div>
@@ -309,17 +298,14 @@ export default function DashboardPage() {
                 </section>
               </div>
 
+              {/* Right */}
               <div className="space-y-8">
+                {/* Projects Worked */}
                 <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
-                  <h2 className="mb-4 text-2xl font-semibold">
-                    Projects Worked
-                  </h2>
+                  <h2 className="mb-4 text-2xl font-semibold">Projects Worked</h2>
                   <div className="flex items-center justify-center">
                     <div className="relative h-40 w-40">
-                      <svg
-                        viewBox="0 0 36 36"
-                        className="absolute h-full w-full"
-                      >
+                      <svg viewBox="0 0 36 36" className="absolute h-full w-full">
                         <path
                           className="text-gray-200"
                           d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
@@ -346,17 +332,14 @@ export default function DashboardPage() {
                     {legendItems.map((legend, idx) => (
                       <div key={idx} className="flex items-center space-x-3">
                         <div className={`h-4 w-12 rounded ${legend.color}`} />
-                        <div className="text-sm font-medium">
-                          {legend.label}
-                        </div>
-                        <div className="ml-auto text-sm text-gray-600">
-                          {legend.percent}
-                        </div>
+                        <div className="text-sm font-medium">{legend.label}</div>
+                        <div className="ml-auto text-sm text-gray-600">{legend.percent}</div>
                       </div>
                     ))}
                   </div>
                 </section>
 
+                {/* Reminders */}
                 <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
                   <h2 className="mb-4 text-2xl font-semibold">Reminders</h2>
                   <ul className="space-y-3">
@@ -367,9 +350,7 @@ export default function DashboardPage() {
                       >
                         <div className="flex justify-between">
                           <div>{reminder.title}</div>
-                          <div className="text-sm text-gray-600">
-                            {reminder.time}
-                          </div>
+                          <div className="text-sm text-gray-600">{reminder.time}</div>
                         </div>
                       </li>
                     ))}
@@ -379,22 +360,29 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {activeNav === "Community" && (
-            <div className="px-0">
-              <CommunityTab />
+          {/* Chat */}
+          {activeNav === "Chat" && <ChatPage />}
+
+          {/* Community */}
+          {activeNav === "Community" && <CommunityTab />}
+
+          {/* Projects/Team */}
+          {activeNav === "Projects/Team" && (
+            <div className="p-6">
+              {/* You can extract a ProjectsPage later */}
+              <h2 className="text-2xl font-semibold">Projects / Team</h2>
+              {/* … */}
             </div>
           )}
-          {activeNav === "Collection" && (
-            <div className="px-0">
-              <CollectionsPage />
-            </div>
-          )}
-          {activeNav === "Canvas" && (
-            <div className="px-0">
-              <Canvas />
-            </div>
-          )
-          }
+
+          {/* Calendar */}
+          {/* {activeNav === "Calendar" && <CalendarPage />} */}
+
+          {/* Collection */}
+          {activeNav === "Collection" && <CollectionsPage />}
+
+          {/* Canvas */}
+          {activeNav === "Canvas" && <Canvas />}
         </main>
       </div>
     </div>
