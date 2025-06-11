@@ -13,8 +13,24 @@ import ProjectDocuments from "@/components/ProjectDocuments";
 
 const navItems = [
   { label: "Home", icon: "🏠" },
-  { label: "Chat", icon: "💬" },
-  { label: "Community", icon: "👥" },
+  {
+    label: "Chat",
+    icon: "💬",
+    hasDropdown: true,
+    subItems: [
+      { label: "Team", icon: "👨‍👩‍👧‍👦" },
+      { label: "ChitChat", icon: "🗣️" },
+    ],},
+  {
+    label: "Community",
+    icon: "👥",
+    hasDropdown: true,
+    subItems: [
+      { label: "Learnings", icon: "📚" },
+      { label: "Referings", icon: "🔗" },
+      { label: "Posts", icon: "📝" },
+    ],
+  },
   { label: "Projects/Team", icon: "📁" },
   { label: "Calendar", icon: "🗓️" },
   { label: "Collection", icon: "📂" },
@@ -98,6 +114,10 @@ export default function DashboardPage() {
     "Today"
   );
   const [projectDropdownOpen, setProjectDropdownOpen] = useState(false);
+  const [chatDropdownOpen, setChatDropdownOpen] = useState(false);
+  const [chatSubPage, setChatSubPage] = useState<"ChitChat" | "Team" | null>(null);
+  const [communityDropdownOpen, setCommunityDropdownOpen] = useState(false);
+  const [communitySubPage, setCommunitySubPage] = useState<"Learnings" | "Referings" | "Posts" | null>(null);
   const [projectSubPage, setProjectSubPage] = useState<
     "NewProject" | "ProjectDoc" | null
   >(null);
@@ -182,6 +202,92 @@ export default function DashboardPage() {
                             <span>Wireframes</span>
                           </li>
                         </ul>
+                      </div>
+                    )}
+                  </div>
+                );
+              } else if (item.label === "Chat" && item.hasDropdown) {
+                return (
+                  <div key={item.label} className="space-y-2">
+                    <button
+                      onClick={() => {
+                        handleNavClick(item.label);
+                        setChatDropdownOpen((prev) => !prev);
+                      }}
+                      className={`flex w-full items-center justify-between px-3 py-2 rounded-md ${
+                        activeNav === item.label
+                          ? "bg-white text-black"
+                          : "text-black hover:bg-gray-300"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{item.icon}</span>
+                        <span className="font-medium">{item.label}</span>
+                      </div>
+                      <ChevronDown
+                        className={`h-4 w-4 transition-transform ${
+                          chatDropdownOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                    {chatDropdownOpen && (
+                      <div className="ml-10 space-y-2 text-sm">
+                        {item.subItems?.map((sub) => (
+                          <button
+                            key={sub.label}
+                            onClick={() => {
+                              setActiveNav("Chat");
+                              setChatSubPage(sub.label as "ChitChat" | "Team");
+                            }}
+                            className="flex items-center gap-2 text-black hover:text-indigo-600"
+                          >
+                            <span className="text-lg">{sub.icon}</span>
+                            <span>{sub.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              } else if (item.label === "Community" && item.hasDropdown) {
+                return (
+                  <div key={item.label} className="space-y-2">
+                    <button
+                      onClick={() => {
+                        handleNavClick(item.label);
+                        setCommunityDropdownOpen((prev) => !prev);
+                      }}
+                      className={`flex w-full items-center justify-between px-3 py-2 rounded-md ${
+                        activeNav === item.label
+                          ? "bg-white text-black"
+                          : "text-black hover:bg-gray-300"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{item.icon}</span>
+                        <span className="font-medium">{item.label}</span>
+                      </div>
+                      <ChevronDown
+                        className={`h-4 w-4 transition-transform ${
+                          communityDropdownOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                    {communityDropdownOpen && (
+                      <div className="ml-10 space-y-2 text-sm">
+                        {item.subItems?.map((sub) => (
+                          <button
+                            key={sub.label}
+                            onClick={() => {
+                              setActiveNav("Community");
+                              setCommunitySubPage(sub.label as "Learnings" | "Referings" | "Posts");
+                            }}
+                            className="flex items-center gap-2 text-black hover:text-indigo-600"
+                          >
+                            <span className="text-lg">{sub.icon}</span>
+                            <span>{sub.label}</span>
+                          </button>
+                        ))}
                       </div>
                     )}
                   </div>
@@ -413,10 +519,19 @@ export default function DashboardPage() {
           )}
 
           {/* Chat */}
-          {activeNav === "Chat" && <ChatPage />}
+          {activeNav === "Chat" && (
+            <div className="p-6 bg-white min-h-screen">
+              {chatSubPage === "ChitChat" && <ChatPage tab="ChitChat" />}
+              {chatSubPage === "Team" && <ChatPage tab="Team" />}
+              {!chatSubPage && <ChatPage tab="Team" />}
+            </div>
+          )}
 
           {/* Community */}
-          {activeNav === "Community" && <CommunityTab />}
+          {activeNav === "Community" && communitySubPage && (
+            <CommunityTab activeTab={communitySubPage} />
+          )}
+
 
           {/* Projects/Team */}
           {activeNav === "Projects/Team" && (

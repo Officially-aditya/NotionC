@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Heart, MessageCircle, Share2, Clock, User, Eye } from "lucide-react";
 
 const tabs = ["Learnings", "Referings", "Posts"];
@@ -185,8 +185,17 @@ const postsData = [
   },
 ];
 
-export default function CommunityInterface() {
+type Props = {
+  activeTab: "Learnings" | "Referings" | "Posts";
+};
+
+export default function CommunityTab({ activeTab: initialTab }: Props) {
   const [activeTab, setActiveTab] = useState("Posts");
+  const [communitySubPage, setCommunitySubPage] = useState<"Learnings" | "Referings" | "Posts" | null>(null);
+
+  useEffect(() => {
+    setCommunitySubPage(activeTab as "Learnings" | "Referings" | "Posts");
+  }, [activeTab]);
 
   const renderLearnings = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
