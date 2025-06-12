@@ -36,6 +36,12 @@ const collections = [{
     size: "4mb",
     date: "29/5/2025",
     image: "https://images.unsplash.com/photo-1747134392167-7b16ac9c3c36?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+},
+{
+     name: "collection name",
+    size: "4mb",
+    date: "29/5/2025",
+    image: "https://images.unsplash.com/photo-1747134392167-7b16ac9c3c36?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 }];
 
 export default function CollectionsPage() {
