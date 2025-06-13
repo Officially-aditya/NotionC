@@ -10,6 +10,8 @@ import ChatPage from "@/components/Chat/ChatPage";
 import { ChevronDown, Plus } from "lucide-react";
 import NewProject from "@/components/NewProject";
 import ProjectDocuments from "@/components/ProjectDocuments";
+import CalendarPage from "@/components/Calendar/CalendarPage";
+
 
 const navItems = [
   { label: "Home", icon: "🏠" },
@@ -547,7 +549,7 @@ export default function DashboardPage() {
           )}
 
           {/* Calendar */}
-          {/* {activeNav === "Calendar" && <CalendarPage />} */}
+          { activeNav === "Calendar" && <CalendarPage />}
 
           {/* Collection */}
           {activeNav === "Collection" && <CollectionsPage />}
