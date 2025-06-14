@@ -1,293 +1,211 @@
+// src/app/page.tsx
 "use client";
 
-import Image from "next/image";
 import React, { useState } from "react";
+import Image from "next/image";
+import {
+  Inbox,
+  MessageCircle,
+  Users,
+  Folder,
+  Calendar as CalendarIcon,
+  Layout,
+  Settings,
+  LogOut,
+  ChevronDown,
+  Plus,
+} from "lucide-react";
+
+import ChatPage from "@/components/Chat/ChatPage";
 import CommunityTab from "@/components/CommunityTab";
 import CollectionsPage from "@/components/CollectionsPage";
 import Canvas from "@/components/Canvas";
-// import CalendarPage from "@/components/Calendar/CalendarPage";
-import ChatPage from "@/components/Chat/ChatPage";
-import { ChevronDown, Plus } from "lucide-react";
 import NewProject from "@/components/NewProject";
 import ProjectDocuments from "@/components/ProjectDocuments";
-import CalendarPage from "@/components/Calendar/CalendarPage";
 
+import CalendarPage from "@/components/Calendar/CalendarPage";
+import RemindersView from "@/components/Calendar/RemindersView";
+import MeetingsView from "@/components/Calendar/MeetingsView";
 
 const navItems = [
-  { label: "Home", icon: "🏠" },
+  { label: "Home", icon: <Inbox /> },
   {
     label: "Chat",
-    icon: "💬",
+    icon: <MessageCircle />,
     hasDropdown: true,
-    subItems: [
-      { label: "Team", icon: "👨‍👩‍👧‍👦" },
-      { label: "ChitChat", icon: "🗣️" },
-    ],},
+    subItems: ["Team", "ChitChat"],
+  },
   {
     label: "Community",
-    icon: "👥",
+    icon: <Users />,
     hasDropdown: true,
-    subItems: [
-      { label: "Learnings", icon: "📚" },
-      { label: "Referings", icon: "🔗" },
-      { label: "Posts", icon: "📝" },
-    ],
-  },
-  { label: "Projects/Team", icon: "📁" },
-  { label: "Calendar", icon: "🗓️" },
-  { label: "Collection", icon: "📂" },
-  { label: "Canvas", icon: "🖼️" },
-];
-
-const tasks = [
-  { title: "Design Review", description: "Finalize UI mockups" },
-  { title: "API Integration", description: "Connect to backend endpoints" },
-  { title: "Write Tests", description: "Achieve 80% coverage" },
-  { title: "Deploy Staging", description: "Publish latest build" },
-];
-
-const meetings = [
-  { time: "9:00 AM", desc: "Stand-up Meeting" },
-  { time: "11:00 AM", desc: "Client Sync" },
-  { time: "2:00 PM", desc: "UX Workshop" },
-  { time: "4:30 PM", desc: "Team Retrospective" },
-];
-
-const projects = [
-  {
-    name: "Temp Mail UI/UX Project",
-    desc: "Redesign dashboard and user flow",
-    date: "21 May, 2025 – 2:00 PM",
-    avatars: [
-      "/images/avatar1.png",
-      "/images/avatar2.png",
-      "/images/avatar3.png",
-    ],
+    subItems: ["Learnings", "Referings", "Posts"],
   },
   {
-    name: "Blockchain Prototype",
-    desc: "Implement P2P network layering",
-    date: "22 May, 2025 – 11:00 AM",
-    avatars: [
-      "/images/avatar2.png",
-      "/images/avatar3.png",
-      "/images/avatar4.png",
-    ],
+    label: "Projects/Team",
+    icon: <Folder />,
+    hasDropdown: true,
+    subItems: ["NewProject", "ProjectDoc"],
   },
   {
-    name: "Video Streaming MVP",
-    desc: "Build IPFS integration module",
-    date: "23 May, 2025 – 1:30 PM",
-    avatars: [
-      "/images/avatar3.png",
-      "/images/avatar4.png",
-      "/images/avatar5.png",
-    ],
+    label: "Calendar",
+    icon: <CalendarIcon />,
+    hasDropdown: true,
+    subItems: ["Designer Task", "Task Reminder", "Meetings"],
   },
-  {
-    name: "Forensic Imager Firmware",
-    desc: "Optimize hardware-level routines",
-    date: "24 May, 2025 – 10:00 AM",
-    avatars: [
-      "/images/avatar4.png",
-      "/images/avatar5.png",
-      "/images/avatar1.png",
-    ],
-  },
-];
+  { label: "Collection", icon: <Layout /> },
+  { label: "Canvas", icon: <Layout /> },
+] as const;
 
-const legendItems = [
-  { label: "Temp Mail UI/UX", color: "bg-indigo-500", percent: "25%" },
-  { label: "Blockchain Prototype", color: "bg-green-500", percent: "30%" },
-  { label: "Video Streaming MVP", color: "bg-yellow-500", percent: "20%" },
-  { label: "Forensic Imager", color: "bg-red-500", percent: "25%" },
-];
-
-const reminders = [
-  { title: "Daily Stand-up", time: "9:00 AM" },
-  { title: "Design Review", time: "1:00 PM" },
-  { title: "Deploy to Prod", time: "5:00 PM" },
-  { title: "Send Status Report", time: "6:30 PM" },
-];
+type NavKey = typeof navItems[number]["label"];
+type ProjectTab = "NewProject" | "ProjectDoc";
+type CalendarTab = "Designer Task" | "Task Reminder" | "Meetings";
+type ChatTab = "Team" | "ChitChat";
+type CommTab = "Learnings" | "Referings" | "Posts";
 
 export default function DashboardPage() {
-  const [activeNav, setActiveNav] = useState<string>("Home");
-  const [activeTab, setActiveTab] = useState<"Today" | "Week" | "Month">(
-    "Today"
-  );
-  const [projectDropdownOpen, setProjectDropdownOpen] = useState(false);
-  const [chatDropdownOpen, setChatDropdownOpen] = useState(false);
-  const [chatSubPage, setChatSubPage] = useState<"ChitChat" | "Team" | null>(null);
-  const [communityDropdownOpen, setCommunityDropdownOpen] = useState(false);
-  const [communitySubPage, setCommunitySubPage] = useState<"Learnings" | "Referings" | "Posts" | null>(null);
-  const [projectSubPage, setProjectSubPage] = useState<
-    "NewProject" | "ProjectDoc" | null
-  >(null);
-  const handleNavClick = (label: string) => {
+  const [activeNav, setActiveNav] = useState<NavKey>("Home");
+  const [activeTab, setActiveTab] = useState<"Today" | "Week" | "Month">("Today");
+
+  // dropdown states
+  const [chatOpen, setChatOpen] = useState(false);
+  const [commOpen, setCommOpen] = useState(false);
+  const [projOpen, setProjOpen] = useState(false);
+  const [calOpen, setCalOpen] = useState(false);
+
+  // sub-tabs
+  const [chatTab, setChatTab] = useState<ChatTab>("Team");
+  const [commTab, setCommTab] = useState<CommTab>("Learnings");
+  const [projTab, setProjTab] = useState<ProjectTab | null>(null);
+  const [calTab, setCalTab] = useState<CalendarTab>("Designer Task");
+
+  // Home data
+  const tasks = [
+    { title: "Design Review", description: "Finalize UI mockups" },
+    { title: "API Integration", description: "Connect to backend endpoints" },
+    { title: "Write Tests", description: "Achieve 80% coverage" },
+    { title: "Deploy Staging", description: "Publish latest build" },
+  ];
+  const meetings = [
+    { time: "9:00 AM", desc: "Stand-up Meeting" },
+    { time: "11:00 AM", desc: "Client Sync" },
+    { time: "2:00 PM", desc: "UX Workshop" },
+    { time: "4:30 PM", desc: "Team Retrospective" },
+  ];
+  const projects = [
+    {
+      name: "Temp Mail UI/UX Project",
+      desc: "Redesign dashboard and user flow",
+      date: "21 May, 2025 – 2:00 PM",
+      avatars: ["/images/avatar1.png", "/images/avatar2.png", "/images/avatar3.png"],
+    },
+    {
+      name: "Blockchain Prototype",
+      desc: "Implement P2P network layering",
+      date: "22 May, 2025 – 11:00 AM",
+      avatars: ["/images/avatar2.png", "/images/avatar3.png", "/images/avatar4.png"],
+    },
+    {
+      name: "Video Streaming MVP",
+      desc: "Build IPFS integration module",
+      date: "23 May, 2025 – 1:30 PM",
+      avatars: ["/images/avatar3.png", "/images/avatar4.png", "/images/avatar5.png"],
+    },
+    {
+      name: "Forensic Imager Firmware",
+      desc: "Optimize hardware-level routines",
+      date: "24 May, 2025 – 10:00 AM",
+      avatars: ["/images/avatar4.png", "/images/avatar5.png", "/images/avatar1.png"],
+    },
+  ];
+  const legendItems = [
+    { label: "Temp Mail UI/UX", color: "bg-indigo-500", percent: "25%" },
+    { label: "Blockchain Prototype", color: "bg-green-500", percent: "30%" },
+    { label: "Video Streaming MVP", color: "bg-yellow-500", percent: "20%" },
+    { label: "Forensic Imager", color: "bg-red-500", percent: "25%" },
+  ];
+  const reminders = [
+    { title: "Daily Stand-up", time: "9:00 AM" },
+    { title: "Design Review", time: "1:00 PM" },
+    { title: "Deploy to Prod", time: "5:00 PM" },
+    { title: "Send Status Report", time: "6:30 PM" },
+  ];
+
+  function handleNav(label: NavKey) {
     setActiveNav(label);
-    if (label !== "Projects/Team") {
-      setProjectDropdownOpen(false);
-      setProjectSubPage(null);
-    }
-  };
+    if (label !== "Chat") setChatOpen(false);
+    if (label !== "Community") setCommOpen(false);
+    if (label !== "Projects/Team") setProjOpen(false);
+    if (label !== "Calendar") setCalOpen(false);
+  }
 
   return (
-    <div className="flex min-h-screen bg-white text-black">
+    <div className="flex h-screen">
       {/* Sidebar */}
-      <aside
-        className="hidden md:flex w-80 flex-col shrink-0"
-        style={{ backgroundColor: "#dcdcdc" }}
-      >
-        <div className="px-6 py-8 flex flex-col flex-1">
-          <h2 className="text-3xl font-semibold text-black mb-10">Logo</h2>
-          <nav className="flex-1 space-y-4">
-            {navItems.map((item) => {
-              if (item.label === "Projects/Team") {
+      <aside className="w-80 flex flex-col border-r bg-gray-100">
+        <div className="px-6 pt-8 flex-1 flex flex-col">
+          <h2 className="text-3xl font-bold mb-10">Logo</h2>
+          <nav className="flex-1 space-y-2">
+            {navItems.map(item => {
+              const isActive = activeNav === item.label;
+              const open =
+                (item.label === "Chat" && chatOpen) ||
+                (item.label === "Community" && commOpen) ||
+                (item.label === "Projects/Team" && projOpen) ||
+                (item.label === "Calendar" && calOpen);
+
+              if (item.hasDropdown) {
                 return (
-                  <div key={item.label} className="space-y-2">
+                  <div key={item.label} className="space-y-1">
                     <button
                       onClick={() => {
-                        handleNavClick(item.label);
-                        setProjectDropdownOpen((prev) => !prev);
+                        handleNav(item.label);
+                        if (item.label === "Chat") setChatOpen(v => !v);
+                        if (item.label === "Community") setCommOpen(v => !v);
+                        if (item.label === "Projects/Team") setProjOpen(v => !v);
+                        if (item.label === "Calendar") setCalOpen(v => !v);
                       }}
-                      className={`flex w-full items-center justify-between px-3 py-2 rounded-md ${
-                        activeNav === item.label
-                          ? "bg-white text-black"
-                          : "text-black hover:bg-gray-300"
+                      className={`w-full flex items-center justify-between px-3 py-2 rounded-md ${
+                        isActive ? "bg-white text-black" : "hover:bg-gray-200"
                       }`}
                     >
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">{item.icon}</span>
-                        <span className="font-medium">{item.label}</span>
-                      </div>
+                      <span className="flex items-center gap-2">
+                        {item.icon} {item.label}
+                      </span>
                       <ChevronDown
-                        className={`h-4 w-4 transition-transform ${
-                          projectDropdownOpen ? "rotate-180" : ""
+                        className={`w-4 h-4 transition-transform ${
+                          open ? "rotate-180" : ""
                         }`}
                       />
                     </button>
-                    {projectDropdownOpen && (
-                      <div className="ml-10 space-y-2 text-sm">
-                        <button
-                          className="flex items-center gap-2 text-black hover:text-indigo-600"
-                          onClick={() => {
-                            setActiveNav("Projects/Team");
-                            setProjectSubPage("NewProject");
-                          }}
-                        >
-                          <Plus className="w-4 h-4" /> New Project
-                        </button>
-                        <div className="text-gray-600 text-xs uppercase mt-1">
-                          Recent
-                        </div>
-                        <ul className="space-y-1">
-                          <li
-                            className="flex items-center gap-2 text-black hover:text-indigo-600 cursor-pointer"
-                            onClick={() => {
-                              setActiveNav("Projects/Team");
-                              setProjectSubPage("ProjectDoc");
-                            }}
-                          >
-                            <span className="text-lg">📄</span>
-                            <span>Project Doc.</span>
-                          </li>
-                          <li className="flex items-center gap-2 text-black hover:text-indigo-600 cursor-pointer">
-                            <span className="text-lg">📊</span>
-                            <span>UI Designs</span>
-                          </li>
-                          <li className="flex items-center gap-2 text-black hover:text-indigo-600 cursor-pointer">
-                            <span className="text-lg">🗂️</span>
-                            <span>Web Application</span>
-                          </li>
-                          <li className="flex items-center gap-2 text-black hover:text-indigo-600 cursor-pointer">
-                            <span className="text-lg">📐</span>
-                            <span>Wireframes</span>
-                          </li>
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                );
-              } else if (item.label === "Chat" && item.hasDropdown) {
-                return (
-                  <div key={item.label} className="space-y-2">
-                    <button
-                      onClick={() => {
-                        handleNavClick(item.label);
-                        setChatDropdownOpen((prev) => !prev);
-                      }}
-                      className={`flex w-full items-center justify-between px-3 py-2 rounded-md ${
-                        activeNav === item.label
-                          ? "bg-white text-black"
-                          : "text-black hover:bg-gray-300"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">{item.icon}</span>
-                        <span className="font-medium">{item.label}</span>
-                      </div>
-                      <ChevronDown
-                        className={`h-4 w-4 transition-transform ${
-                          chatDropdownOpen ? "rotate-180" : ""
-                        }`}
-                      />
-                    </button>
-                    {chatDropdownOpen && (
-                      <div className="ml-10 space-y-2 text-sm">
-                        {item.subItems?.map((sub) => (
+                    {open && (
+                      <div className="ml-6 space-y-1 text-sm">
+                        {item.subItems!.map(sub => (
                           <button
-                            key={sub.label}
+                            key={sub}
                             onClick={() => {
-                              setActiveNav("Chat");
-                              setChatSubPage(sub.label as "ChitChat" | "Team");
+                              handleNav(item.label);
+                              switch (item.label) {
+                                case "Chat":
+                                  setChatTab(sub as ChatTab);
+                                  break;
+                                case "Community":
+                                  setCommTab(sub as CommTab);
+                                  break;
+                                case "Projects/Team":
+                                  setProjTab(sub as ProjectTab);
+                                  break;
+                                case "Calendar":
+                                  setCalTab(sub as CalendarTab);
+                                  break;
+                              }
                             }}
-                            className="flex items-center gap-2 text-black hover:text-indigo-600"
+                            className="w-full text-left px-2 py-1 rounded hover:bg-indigo-50"
                           >
-                            <span className="text-lg">{sub.icon}</span>
-                            <span>{sub.label}</span>
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              } else if (item.label === "Community" && item.hasDropdown) {
-                return (
-                  <div key={item.label} className="space-y-2">
-                    <button
-                      onClick={() => {
-                        handleNavClick(item.label);
-                        setCommunityDropdownOpen((prev) => !prev);
-                      }}
-                      className={`flex w-full items-center justify-between px-3 py-2 rounded-md ${
-                        activeNav === item.label
-                          ? "bg-white text-black"
-                          : "text-black hover:bg-gray-300"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">{item.icon}</span>
-                        <span className="font-medium">{item.label}</span>
-                      </div>
-                      <ChevronDown
-                        className={`h-4 w-4 transition-transform ${
-                          communityDropdownOpen ? "rotate-180" : ""
-                        }`}
-                      />
-                    </button>
-                    {communityDropdownOpen && (
-                      <div className="ml-10 space-y-2 text-sm">
-                        {item.subItems?.map((sub) => (
-                          <button
-                            key={sub.label}
-                            onClick={() => {
-                              setActiveNav("Community");
-                              setCommunitySubPage(sub.label as "Learnings" | "Referings" | "Posts");
-                            }}
-                            className="flex items-center gap-2 text-black hover:text-indigo-600"
-                          >
-                            <span className="text-lg">{sub.icon}</span>
-                            <span>{sub.label}</span>
+                            {item.label === "Projects/Team" && sub === "NewProject" && (
+                              <Plus className="inline-block w-4 h-4 mr-1" />
+                            )}
+                            {sub}
                           </button>
                         ))}
                       </div>
@@ -295,47 +213,41 @@ export default function DashboardPage() {
                   </div>
                 );
               }
+
               return (
                 <button
                   key={item.label}
-                  onClick={() => handleNavClick(item.label)}
-                  className={`flex w-full items-center px-3 py-2 rounded-md ${
-                    activeNav === item.label
-                      ? "bg-white text-black"
-                      : "text-black hover:bg-gray-300"
+                  onClick={() => handleNav(item.label)}
+                  className={`w-full flex items-center gap-2 px-3 py-2 rounded-md ${
+                    isActive ? "bg-white text-black" : "hover:bg-gray-200"
                   }`}
                 >
-                  <span className="mr-3 text-xl">{item.icon}</span>
-                  <span className="font-medium">{item.label}</span>
+                  {item.icon} {item.label}
                 </button>
               );
             })}
           </nav>
-          <div className="mt-auto space-y-3">
-            <button className="flex w-full items-center px-3 py-2 text-black hover:text-white hover:bg-gray-700 rounded-md">
-              <span className="mr-2 text-xl">⚙️</span>
-              <span>Settings</span>
+          <div className="mt-auto space-y-2 pb-6">
+            <button className="w-full flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-200">
+              <Settings /> Settings
             </button>
-            <button className="flex w-full items-center px-3 py-2 text-black hover:text-white hover:bg-gray-700 rounded-md">
-              <span className="mr-2 text-xl">🚪</span>
-              <span>Log Out</span>
+            <button className="w-full flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-200">
+              <LogOut /> Log Out
             </button>
           </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <div className="flex flex-1 flex-col">
-        {/* Header only on Home */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header on Home */}
         {activeNav === "Home" && (
-          <header className="flex items-center justify-between bg-white border-b border-gray-200 px-6 py-4 text-black">
-            <h1 className="text-4xl font-bold" style={{ color: "#2d2d2d" }}>
-              DASHBOARD
-            </h1>
+          <header className="flex items-center justify-between px-6 py-4 border-b bg-white">
+            <h1 className="text-4xl font-bold">DASHBOARD</h1>
             <input
               type="text"
               placeholder="Search..."
-              className="w-64 rounded-md border border-gray-400 bg-white px-4 py-2 text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-64 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
             />
           </header>
         )}
@@ -346,60 +258,49 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
               {/* Left */}
               <div className="space-y-8 lg:col-span-2">
-                {/* Tasks & Meetings */}
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  {/* Today's Tasks */}
-                  <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
-                    <h2 className="mb-4 text-2xl font-semibold">
-                      Today’s Tasks
-                    </h2>
-                    <ul className="space-y-3">
-                      {tasks.map((task, idx) => (
-                        <li
-                          key={idx}
-                          className="flex items-start rounded-[24px] border border-[#D9D9D9] bg-white p-4 hover:bg-gray-100"
-                        >
-                          <div className="flex-1">
-                            <h3 className="font-medium">{task.title}</h3>
-                            <p className="mt-1 text-sm text-gray-600">
-                              {task.description}
-                            </p>
-                          </div>
-                          <button className="ml-4 rounded-md bg-[#5865f2] px-3 py-1 text-sm font-medium text-white hover:bg-[#4752d6]">
-                            Done
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-
-                  {/* Today's Meetings */}
-                  <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
-                    <h2 className="mb-4 text-2xl font-semibold">
-                      Today’s Meetings
-                    </h2>
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                      {meetings.map((meet, idx) => (
-                        <div
-                          key={idx}
-                          className="rounded-[24px] border border-[#D9D9D9] bg-white p-4 hover:bg-gray-100"
-                        >
-                          <p className="font-semibold">{meet.time}</p>
-                          <p className="mt-1 text-sm text-gray-600">
-                            {meet.desc}
-                          </p>
+                {/* Today’s Tasks */}
+                <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
+                  <h2 className="mb-4 text-2xl font-semibold">Today’s Tasks</h2>
+                  <ul className="space-y-3">
+                    {tasks.map((task, idx) => (
+                      <li
+                        key={idx}
+                        className="flex items-start rounded-[24px] border border-[#D9D9D9] bg-white p-4 hover:bg-gray-100"
+                      >
+                        <div className="flex-1">
+                          <h3 className="font-medium">{task.title}</h3>
+                          <p className="mt-1 text-sm text-gray-600">{task.description}</p>
                         </div>
-                      ))}
-                    </div>
-                  </section>
-                </div>
+                        <button className="ml-4 rounded-md bg-[#5865f2] px-3 py-1 text-sm font-medium text-white hover:bg-[#4752d6]">
+                          Done
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+
+                {/* Today’s Meetings */}
+                <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
+                  <h2 className="mb-4 text-2xl font-semibold">Today’s Meetings</h2>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    {meetings.map((m, i) => (
+                      <div
+                        key={i}
+                        className="rounded-[24px] border border-[#D9D9D9] bg-white p-4 hover:bg-gray-100"
+                      >
+                        <p className="font-semibold">{m.time}</p>
+                        <p className="mt-1 text-sm text-gray-600">{m.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
 
                 {/* Project Lists */}
                 <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
                   <div className="flex items-center justify-between">
                     <h2 className="text-2xl font-semibold">Project Lists</h2>
                     <div className="space-x-2">
-                      {(["Today", "Week", "Month"] as const).map((label) => (
+                      {(["Today", "Week", "Month"] as const).map(label => (
                         <button
                           key={label}
                           onClick={() => setActiveTab(label)}
@@ -415,29 +316,23 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   <div className="mt-6 space-y-5">
-                    {projects.map((proj, idx) => (
+                    {projects.map((p, i) => (
                       <div
-                        key={idx}
+                        key={i}
                         className="flex items-center justify-between rounded-[24px] border border-[#D9D9D9] bg-white p-4 hover:bg-gray-100"
                       >
                         <div className="space-y-1">
-                          <h3 className="text-lg font-semibold">{proj.name}</h3>
-                          <p className="text-sm text-gray-600">{proj.desc}</p>
-                          <p className="text-xs text-gray-500">{proj.date}</p>
+                          <h3 className="text-lg font-semibold">{p.name}</h3>
+                          <p className="text-sm text-gray-600">{p.desc}</p>
+                          <p className="text-xs text-gray-500">{p.date}</p>
                         </div>
                         <div className="flex -space-x-2">
-                          {proj.avatars.map((src, aidx) => (
+                          {p.avatars.map((src, j) => (
                             <div
-                              key={aidx}
+                              key={j}
                               className="relative h-8 w-8 rounded-full border-2 border-white"
                             >
-                              <Image
-                                src={src}
-                                alt="avatar"
-                                fill
-                                className="rounded-full object-cover"
-                                sizes="32px"
-                              />
+                              <Image src={src} alt="avatar" fill className="rounded-full object-cover" sizes="32px"/>
                             </div>
                           ))}
                         </div>
@@ -449,68 +344,33 @@ export default function DashboardPage() {
 
               {/* Right */}
               <div className="space-y-8">
-                {/* Projects Worked */}
+                {/* Projects Worked (donut) */}
                 <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
-                  <h2 className="mb-4 text-2xl font-semibold">
-                    Projects Worked
-                  </h2>
-                  <div className="flex items-center justify-center">
-                    <div className="relative h-40 w-40">
-                      <svg
-                        viewBox="0 0 36 36"
-                        className="absolute h-full w-full"
-                      >
-                        <path
-                          className="text-gray-200"
-                          d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        />
-                        <path
-                          className="text-indigo-500"
-                          strokeDasharray="100, 100"
-                          strokeDashoffset="75"
-                          d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        />
-                      </svg>
-                      <div className="absolute inset-0 flex items-center justify-center text-3xl font-bold">
-                        75%
-                      </div>
+                  <h2 className="mb-4 text-2xl font-semibold">Projects Worked</h2>
+                  <div className="flex items-center justify-center mb-6">
+                    <div className="relative h-40 w-40">{/* SVG donut */}</div>
+                  </div>
+                  {legendItems.map((l, i) => (
+                    <div key={i} className="flex items-center space-x-3">
+                      <div className={`h-4 w-12 rounded ${l.color}`} />
+                      <div className="text-sm font-medium">{l.label}</div>
+                      <div className="ml-auto text-sm text-gray-600">{l.percent}</div>
                     </div>
-                  </div>
-                  <div className="mt-6 space-y-3">
-                    {legendItems.map((legend, idx) => (
-                      <div key={idx} className="flex items-center space-x-3">
-                        <div className={`h-4 w-12 rounded ${legend.color}`} />
-                        <div className="text-sm font-medium">
-                          {legend.label}
-                        </div>
-                        <div className="ml-auto text-sm text-gray-600">
-                          {legend.percent}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  ))}
                 </section>
 
                 {/* Reminders */}
                 <section className="rounded-[24px] bg-[#F6F6F6] p-6 shadow-md border border-[#D9D9D9]">
                   <h2 className="mb-4 text-2xl font-semibold">Reminders</h2>
                   <ul className="space-y-3">
-                    {reminders.map((reminder, idx) => (
+                    {reminders.map((r, i) => (
                       <li
-                        key={idx}
+                        key={i}
                         className="rounded-[24px] border border-[#D9D9D9] bg-white p-4 hover:bg-gray-100"
                       >
                         <div className="flex justify-between">
-                          <div>{reminder.title}</div>
-                          <div className="text-sm text-gray-600">
-                            {reminder.time}
-                          </div>
+                          <span>{r.title}</span>
+                          <span className="text-gray-600">{r.time}</span>
                         </div>
                       </li>
                     ))}
@@ -521,35 +381,32 @@ export default function DashboardPage() {
           )}
 
           {/* Chat */}
-          {activeNav === "Chat" && (
-            <div className="p-6 bg-white min-h-screen">
-              {chatSubPage === "ChitChat" && <ChatPage tab="ChitChat" />}
-              {chatSubPage === "Team" && <ChatPage tab="Team" />}
-              {!chatSubPage && <ChatPage tab="Team" />}
-            </div>
-          )}
+          {activeNav === "Chat" && <ChatPage tab={chatTab} />}
 
           {/* Community */}
-          {activeNav === "Community" && communitySubPage && (
-            <CommunityTab activeTab={communitySubPage} />
-          )}
-
+          {activeNav === "Community" && <CommunityTab activeTab={commTab} />}
 
           {/* Projects/Team */}
           {activeNav === "Projects/Team" && (
-            <div className="p-6 bg-white min-h-screen">
-              {projectSubPage === "NewProject" && <NewProject />}
-              {projectSubPage === "ProjectDoc" && <ProjectDocuments />}
-              {!projectSubPage && (
-                <h2>
-                  Select "New Project" or "Project Doc." from sidebar dropdown.
-                </h2>
+            <div className="p-6">
+              {projTab === "NewProject" ? (
+                <NewProject />
+              ) : projTab === "ProjectDoc" ? (
+                <ProjectDocuments />
+              ) : (
+                <p>Select “New Project” or “Project Doc.”</p>
               )}
             </div>
           )}
 
           {/* Calendar */}
-          { activeNav === "Calendar" && <CalendarPage />}
+          {activeNav === "Calendar" && (
+            <>
+              {calTab === "Designer Task" && <CalendarPage />}
+              {calTab === "Task Reminder" && <RemindersView />}
+              {calTab === "Meetings" && <MeetingsView />}
+            </>
+          )}
 
           {/* Collection */}
           {activeNav === "Collection" && <CollectionsPage />}
